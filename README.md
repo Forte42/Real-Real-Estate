@@ -32,10 +32,10 @@ Our MVP will be based on the following user stories to start:
 - As a home buyer, I want to view a map of which counties gained or loss value in a specific timeframe
 - As a home buyer, I want to determine which county has the highest probability of gaining or losing in the future
 
+
 We will groom user stories and add acceptance critera during team meetings.
 
 ## Technology Stack
-
 The technology stack for this project includes (but not limited to):
 
 - Languages - Python, JavaScript
@@ -54,3 +54,4 @@ TBD
 - Garrett Hernandez
 - Quinn Wong
 - Smruthi Dandi
+
