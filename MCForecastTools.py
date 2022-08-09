@@ -72,4 +72,52 @@ class MCSimulation:
         self.confidence_interval = portfolio_cumulative_returns.iloc[-1, :].quantile(q=[0.025, 0.975])
         
         return portfolio_cumulative_returns
+        
+    
+    def plot_simulation(self):
+        """
+        Visualizes the simulated stock trajectories using calc_cumulative_return method.
+
+        """ 
+        
+        # Check to make sure that simulation has run previously. 
+        if not isinstance(self.simulated_return,pd.DataFrame):
+            self.calc_cumulative_return()
+            
+        # Use Pandas plot function to plot the return data
+        plot_title = f"{self.nSim} Simulations of Cumulative Portfolio Return Trajectories Over the Next {self.nTrading} Trading Months."
+        return self.simulated_return.plot(legend=None,title=plot_title)
+        
+    def plot_distribution(self):
+        """
+        Visualizes the distribution of cumulative returns simulated using calc_cumulative_return method.
+
+        """
+        
+        # Check to make sure that simulation has run previously.
+        if not isinstance(self.simulated_return,pd.DataFrame):
+            self.calc_cumulative_return()
+        
+        # Use the `plot` function to create a probability distribution histogram of simulated ending prices
+        # with markings for a 95% confidence interval
+        plot_title = f"Distribution of Final Cumuluative Returns Across All {self.nSim} Simulations"
+        plt = self.simulated_return.iloc[-1, :].plot(kind='hist', bins=10,density=True,title=plot_title)
+        plt.axvline(self.confidence_interval.iloc[0], color='r')
+        plt.axvline(self.confidence_interval.iloc[1], color='r')
+        return plt
+        
+    def summarize_cumulative_return(self):
+        """
+        Calculate final summary statistics for Monte Carlo simulated stock data.
+        
+        """
+        
+        # Check to make sure that simulation has run previously.
+        if not isinstance(self.simulated_return,pd.DataFrame):
+            self.calc_cumulative_return()
+            
+        metrics = self.simulated_return.iloc[-1].describe()
+        ci_series = self.confidence_interval
+        ci_series.index = ["95% CI Lower","95% CI Upper"]
+        return metrics.append(ci_series)
 
