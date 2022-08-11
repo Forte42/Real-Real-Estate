@@ -43,18 +43,6 @@ We will groom user stories and add acceptance critera during team meetings.
 
 ## Technology Stack
 ---
-The technology stack for this project includes (but not limited to):
-
-Languages - Python, JavaScript
-
-Python Libraries - pandas, json, requests
-
-UI Frameworks - React, Angular, CSS
-
-Charting - TBD
-
-Third Party REST APIs - TBD
-
-Database - MySQL
+This code uses Python 3.9.12 with Pandas (1.4.2), Jupyterlab (3.3.2), hvPlot (0.7.3), Nasdaq-Data-Link (1.0.2), and Pandas_ta (0.3.14b0).
 
 
