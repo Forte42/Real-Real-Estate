@@ -190,5 +190,10 @@ with macd_container:
     col1.write(hv.render(plotting_county_macd, backend='bokeh'))
 
 with montecarlo:
-
     st.subheader("Monte Carlo Simulations")
+    monte_carlo_county_list = filtered_df['county'].unique()
+    options = st.multiselect(
+     'Choose list of counties that you would like to get simulations for',
+     monte_carlo_county_list,
+     [])
+    st.write(options)
