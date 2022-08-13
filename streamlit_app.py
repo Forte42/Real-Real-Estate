@@ -16,8 +16,6 @@ import macd
 
 # from application.app.folder.file import func_name
 
-
-
 st.set_page_config(layout="wide")
 
 # Global variables
@@ -89,6 +87,7 @@ with avg_home_sales:
         hover=True,
         hover_cols=['county', 'cum_pct_ch'],
         size='value',
+        cmap='seismic',
         color='value',
         tiles='OSM',
         height=700,
@@ -123,6 +122,7 @@ with pct_change_sales:
         hover_cols=['county', 'cum_pct_ch'],
         size='cum_pct_ch',
         color='cum_pct_ch',
+        cmap='seismic',
         tiles='OSM',
         height=700,
         width=700,
