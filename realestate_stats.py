@@ -1,9 +1,18 @@
 import pandas as pd
 
-# Return a DataFrame that provides the mean value for a date range
-# grouped by counties and states
 def get_county_df_with_mean(df, start_date, end_date):    
-    # display(df.head())
+    """
+    Return a DataFrame that provides the mean value for a date range grouped by counties and states
+    
+    Parameters: 
+        df - DataFrame to calculate mean value for
+        start_date - filter data after this date
+        end_date - filter data before this date
+    
+    Returns: 
+        DataFrame with mean value grouped by counties and states
+        
+    """
     start_date = pd.to_datetime(start_date) 
     end_date = pd.to_datetime(end_date)
 
@@ -15,10 +24,20 @@ def get_county_df_with_mean(df, start_date, end_date):
     return mean_df
 
 
-def get_county_df_with_cum_pct_change(df, start_date, end_date):    
-    # df = df[['region_id', 'county', 'state', 'date', 'value', 'latitude', 'longitude']]
+def get_county_df_with_cum_pct_change(df, start_date, end_date):   
+    """
+    Return a DataFrame that provides the cumulative percentage change for a 
+    date range grouped by counties and states
     
-    # display(df.head()
+    Parameters: 
+        df - DataFrame to calculate mean value for
+        start_date - filter data after this date
+        end_date - filter data before this date
+    
+    Returns: 
+        DataFrame with cumulative percentage change
+        
+    """
     start_date = pd.to_datetime(start_date) 
     end_date = pd.to_datetime(end_date)
 
