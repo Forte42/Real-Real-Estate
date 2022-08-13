@@ -14,7 +14,6 @@ import realestate_data as red
 import realestate_stats as res
 
 st.set_page_config(layout="wide")
-st.title('Realestate of Mind')
 
 # Global variables
 region_df = pd.DataFrame()
@@ -53,58 +52,83 @@ master_df = pd.merge(zillow_merge_df, county_coordinates_df,
 
 master_df['date'] = pd.to_datetime(master_df['date'])
 
+# Set up containers
+header = st.container()
+avg_home_sales = st.container()
+pct_change_sales = st.container()
+macd = st.container()
+montecarlo = st.container()
 
-# load_data()
-# clean_merge_data()
+with header:
+    st.title('Realestate of Mind')
 
-# Display average home sales per county
-county_mean_df = res.get_county_df_with_mean(
-    master_df, '2010-01-01', '2021-12-31')
-# display(county_mean_df.head())
+with avg_home_sales:
 
-# Divide price by 1000 so that it looks better on map.
-county_mean_df["value"] = county_mean_df["value"] / 1000
+    st.subheader("Average Home Sales")
 
-county_mean_plot = county_mean_df.hvplot.points(
-    'longitude',
-    'latitude',
-    geo=True,
-    hover=True,
-    hover_cols=['county', 'cum_pct_ch'],
-    size='value',
-    color='value',
-    tiles='OSM',
-    height=700,
-    width=1200,
-    title='Average home sales per county from 1/1/2010 to 12/31/2021')
+    # Display average home sales per county
+    county_mean_df = res.get_county_df_with_mean(
+        master_df, '2010-01-01', '2021-12-31')
+    # display(county_mean_df.head())
 
-st.write(hv.render(county_mean_plot, backend='bokeh'))
+    # Divide price by 1000 so that it looks better on map.
+    county_mean_df["value"] = county_mean_df["value"] / 1000
 
+    county_mean_plot = county_mean_df.hvplot.points(
+        'longitude',
+        'latitude',
+        geo=True,
+        hover=True,
+        hover_cols=['county', 'cum_pct_ch'],
+        size='value',
+        color='value',
+        tiles='OSM',
+        height=700,
+        width=700,
+        title='Average home sales per county from 1/1/2010 to 12/31/2021')
 
-# Display percent change per county
-county_pct_change_df = res.get_county_df_with_cum_pct_change(
-    master_df, '2010-01-01', '2022-08-01')
-
-# Not sure why county_pct_change is missing the longitude and latitude, but I have to add it back :(
-merge_county_pct_change_df = pd.merge(
-    county_pct_change_df, county_coordinates_df, on=['county', 'state'])
+    col1, col2 = st.columns(2)
+    col1.write(hv.render(county_mean_plot, backend='bokeh'))
+    col2.write(county_mean_df)
 
 
-# Drop unnecessary columns
-merge_county_pct_change_df = merge_county_pct_change_df[[
-    'region_id', 'county', 'state', 'latitude', 'longitude', 'cum_pct_ch']]
+with pct_change_sales:
+    st.subheader("Percent Change in Home Sales")
 
-pct_change_plot = merge_county_pct_change_df.hvplot.points(
-    'longitude',
-    'latitude',
-    geo=True,
-    hover=True,
-    hover_cols=['county', 'cum_pct_ch'],
-    size='cum_pct_ch',
-    color='cum_pct_ch',
-    tiles='OSM',
-    height=700,
-    width=1200,
-    title='Percent change per county from 1/1/2010 to 12/31/2021')
+    # Display percent change per county
+    county_pct_change_df = res.get_county_df_with_cum_pct_change(
+        master_df, '2010-01-01', '2022-08-01')
 
-st.write(hv.render(pct_change_plot, backend='bokeh'))
+    # Not sure why county_pct_change is missing the longitude and latitude, but I have to add it back :(
+    merge_county_pct_change_df = pd.merge(
+        county_pct_change_df, county_coordinates_df, on=['county', 'state'])
+
+    # Drop unnecessary columns
+    merge_county_pct_change_df = merge_county_pct_change_df[[
+        'region_id', 'county', 'state', 'latitude', 'longitude', 'cum_pct_ch']]
+
+    pct_change_plot = merge_county_pct_change_df.hvplot.points(
+        'longitude',
+        'latitude',
+        geo=True,
+        hover=True,
+        hover_cols=['county', 'cum_pct_ch'],
+        size='cum_pct_ch',
+        color='cum_pct_ch',
+        tiles='OSM',
+        height=700,
+        width=700,
+        title='Percent change per county from 1/1/2010 to 12/31/2021')
+
+    col1, col2 = st.columns(2)
+    col1.write(hv.render(pct_change_plot, backend='bokeh'))
+    col2.write(merge_county_pct_change_df)
+
+with macd:
+
+    st.subheader("MAC/D")
+
+
+with montecarlo:
+
+    st.subheader("Monte Carlo Simulations")
