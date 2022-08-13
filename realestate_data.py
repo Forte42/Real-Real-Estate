@@ -2,12 +2,30 @@ import pandas as pd
 import nasdaqdatalink
 from pathlib import Path
 
-# A function to retrieve a dataframe of counties, zips, etc
+
 def get_regions(regions):    
+    """
+    Fetches a dataframe of Zillow region data (counties, states, etc) from Zillow's REST APIs.
+    
+    Parameters: 
+        regions - the type of region to return, eg county, state 
+        
+    Returns: 
+        DataFrame with Zillow region data
+        
+    """
     region_df=nasdaqdatalink.get_table('ZILLOW/REGIONS', region_type=regions)  
     return region_df
 
 def load_zillow_region_data():
+    """
+    Fetches Zillow county data and returns a cleaned up DataFrame.
+    
+    Returns: 
+        DataFrame with Zillow county data
+        
+    """
+        
     region_df = get_regions('county')
     region_df[["county", "state"]] = region_df["region"].str.split(';', 1, expand=True)
     region_df["state"] = region_df["state"].str.split(';', 1, expand=True)[0]
@@ -27,6 +45,17 @@ def load_zillow_region_data():
 
 
 def load_zillow_sales_data(region_df):
+    """
+    Loads Zillow sales data from a CSV file.  We then merge the Zillow sales 
+    data with the region DataFrame.
+    
+    Parameters: 
+        region_df - Zillow region DataFrame 
+    
+    Returns: 
+        merged DataFrame with Zillow sales and region data.
+        
+    """
     # A function to load and clean Zillow sales data
     # Reading in Database
     zillow_data = pd.read_csv(
@@ -39,9 +68,28 @@ def load_zillow_sales_data(region_df):
     # Check the merged Zillow data
     return zillow_merge_df
 
-def load_county_coordinates():
-    # Load county coordinates
 
+def get_zillow_data():
+    """
+    Get the Zillow sales data. 
+    The actual API call using the SDK.
+    Instructions can be found here https://data.nasdaq.com/databases/ZILLOW/usage/quickstart/python
+    Replace 'quandl' w/ 'nasdaqdatalink
+    """
+    data = nasdaqdatalink.export_table('ZILLOW/DATA', indicator_id='ZSFH', region_id=list(region_df['region_id']),filename='db.zip')
+    
+    # Unzipping database from API call
+    shutil.unpack_archive('db.zip')
+    return data        
+
+def load_county_coordinates():
+    """
+    Loads county coordinates data from a CSV file.  
+    
+    Returns: 
+        DataFrame with county coordinates
+        
+    """
     # Read in county data with coordinates
     county_coordinates_df = pd.read_csv(
         Path('counties_w_coordinates.csv')
@@ -83,59 +131,9 @@ def load_county_coordinates():
     # Rename column names
     county_coordinates_df.rename(
         columns={'Latitude': 'latitude', 'Longitude': 'longitude'}, inplace=True)
+    
+    # Drop unnecessary columns
+    county_coordinates_df = county_coordinates_df[['county', 'state', 'latitude', 'longitude']]
 
     return county_coordinates_df
 
-
-
-def get_county_df_with_mean(df, start_date, end_date):    
-    display(df.head())
-    start_date = pd.to_datetime(start_date) 
-    end_date = pd.to_datetime(end_date)
-
-    cur_df = df
-    cur_df = cur_df[cur_df['date'].dt.year > start_date.year]
-    cur_df = cur_df[cur_df['date'].dt.year < end_date.year]
-    
-    mean_df = cur_df.groupby(["state", "county"]).mean()
-    return mean_df
-
-# Return a DataFrame for a given region_id for a date range
-def get_region_df(df, region_id, start_date, end_date): 
-    # print("XXXX")
-    # display(region_id)
-    
-    start_date = pd.to_datetime(start_date)
-    end_date = pd.to_datetime(end_date)
-    
-    cur_df = df[df['region_id'] == region_id]
-    cur_df = cur_df[cur_df['date'].dt.year >= start_date.year ]  
-    # cur_df = cur_df[cur_df['date'].dt.month >= start_date.month]
-    cur_df = cur_df[cur_df['date'].dt.year <= end_date.year]
-    # cur_df = cur_df[cur_df['date'].dt.month <= end_date.month]
-    
-    return cur_df
-
-# Return a DataFrame that includes pct_change for a given region_id for a date range.
-def get_region_df_with_pct_change(df, region_id, start_date, end_date):
-    cur_df = get_region_df(df, region_id, start_date, end_date)
-    cur_df['pct_change'] = cur_df['value'].pct_change() 
-    cur_df['pct_change'] = cur_df['pct_change'].fillna(0) 
-    return cur_df
-    # return df
-
-# Return the total pct_change for a given region_id for a date range.
-def calc_pct_change(df, region_id, start_date, end_date):
-    cur_df = get_region_df(df, region_id, start_date, end_date)
-    cur_df['pct_change'] = cur_df['value'].pct_change(len(cur_df.index)-1) 
-    cur_df['pct_change'] = cur_df['pct_change'].fillna(0) 
-    val = cur_df.tail(1)['pct_change']
-    
-    return val.iloc[0].astype(float)
-    
-
-
-def hello_world(start_date): 
-    print(f"start_date: {start_date}")
-    start_date = pd.to_datetime(start_date) 
-    return start_date
