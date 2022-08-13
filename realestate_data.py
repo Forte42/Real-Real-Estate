@@ -1,7 +1,10 @@
 import pandas as pd
 import nasdaqdatalink
 from pathlib import Path
+import shutil
 
+
+nasdaqdatalink.read_key(filename=".env")
 
 def get_regions(regions):    
     """

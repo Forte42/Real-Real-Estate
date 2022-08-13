@@ -16,6 +16,8 @@ import macd
 
 # from application.app.folder.file import func_name
 
+
+
 st.set_page_config(layout="wide")
 
 # Global variables
