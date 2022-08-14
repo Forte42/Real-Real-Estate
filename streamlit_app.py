@@ -72,71 +72,71 @@ montecarlo = st.container()
 with header:
     st.title('Realestate of Mind')
 
-with avg_home_sales:
+# with avg_home_sales:
 
-    st.subheader("Average Home Sales")
+#     st.subheader("Average Home Sales")
 
-    min_year = st.slider('Starting Year', 1997, 2022, 1997)
-    max_year = st.slider('Ending Year', 1997, 2022, 2022)
+#     min_year = st.slider('Starting Year', 1997, 2022, 1997)
+#     max_year = st.slider('Ending Year', 1997, 2022, 2022)
 
-    # Display average home sales per county
-    county_mean_df = res.get_county_df_with_mean(
-        master_df, str(min_year) + '-01-01', str(max_year) + '-01-01')
+#     # Display average home sales per county
+#     county_mean_df = res.get_county_df_with_mean(
+#         master_df, str(min_year) + '-01-01', str(max_year) + '-01-01')
 
-    # Divide price by 1000 so that it looks better on map.
-    county_mean_df["value"] = county_mean_df["value"] / 1000
+#     # Divide price by 1000 so that it looks better on map.
+#     county_mean_df["value"] = county_mean_df["value"] / 1000
 
-    county_mean_plot = county_mean_df.hvplot.points(
-        'longitude',
-        'latitude',
-        geo=True,
-        hover=True,
-        hover_cols=['county', 'cum_pct_ch'],
-        size='value',
-        cmap='seismic',
-        color='value',
-        tiles='OSM',
-        height=700,
-        width=700,
-        title='Average home sales per county from 1/1/2010 to 12/31/2021')
+#     county_mean_plot = county_mean_df.hvplot.points(
+#         'longitude',
+#         'latitude',
+#         geo=True,
+#         hover=True,
+#         hover_cols=['county', 'cum_pct_ch'],
+#         size='value',
+#         cmap='seismic',
+#         color='value',
+#         tiles='OSM',
+#         height=700,
+#         width=700,
+#         title='Average home sales per county from 1/1/2010 to 12/31/2021')
 
-    col1, col2 = st.columns(2)
-    col1.write(hv.render(county_mean_plot, backend='bokeh'))
-    col2.write(county_mean_df)
+#     col1, col2 = st.columns(2)
+#     col1.write(hv.render(county_mean_plot, backend='bokeh'))
+#     col2.write(county_mean_df)
 
 
-with pct_change_sales:
-    st.subheader("Percent Change in Home Sales")
+# with pct_change_sales:
+#     st.subheader("Percent Change in Home Sales")
 
-    # Display percent change per county
-    county_pct_change_df = res.get_county_df_with_cum_pct_change(
-        master_df, '2010-01-01', '2022-08-01')
+#     # Display percent change per county
+#     county_pct_change_df = res.get_county_df_with_cum_pct_change(
+#         master_df, '2010-01-01', '2022-08-01')
 
-    # Not sure why county_pct_change is missing the longitude and latitude, but I have to add it back :(
-    merge_county_pct_change_df = pd.merge(
-        county_pct_change_df, county_coordinates_df, on=['county', 'state'])
+#     # Not sure why county_pct_change is missing the longitude and latitude, but I have to add it back :(
+#     merge_county_pct_change_df = pd.merge(
+#         county_pct_change_df, county_coordinates_df, on=['county', 'state'])
 
-    # Drop unnecessary columns
-    merge_county_pct_change_df = merge_county_pct_change_df[[
-        'region_id', 'county', 'state', 'latitude', 'longitude', 'cum_pct_ch']]
+#     # Drop unnecessary columns
+#     merge_county_pct_change_df = merge_county_pct_change_df[[
+#         'region_id', 'county', 'state', 'latitude', 'longitude', 'cum_pct_ch']]
 
-    pct_change_plot = merge_county_pct_change_df.hvplot.points(
-        'longitude',
-        'latitude',
-        geo=True,
-        hover=True,
-        hover_cols=['county', 'cum_pct_ch'],
-        size='cum_pct_ch',
-        color='cum_pct_ch',
-        cmap='seismic',
-        tiles='OSM',
-        height=700,
-        width=700,
-        title='Percent change per county from 1/1/2010 to 12/31/2021')
+#     pct_change_plot = merge_county_pct_change_df.hvplot.points(
+#         'longitude',
+#         'latitude',
+#         geo=True,
+#         hover=True,
+#         hover_cols=['county', 'cum_pct_ch'],
+#         size='cum_pct_ch',
+#         color='cum_pct_ch',
+#         cmap='seismic',
+#         tiles='OSM',
+#         height=700,
+#         width=700,
+#         title='Percent change per county from 1/1/2010 to 12/31/2021')
 
-    col1, col2 = st.columns(2)
-    col1.write(hv.render(pct_change_plot, backend='bokeh'))
-    col2.write(merge_county_pct_change_df)
+#     col1, col2 = st.columns(2)
+#     col1.write(hv.render(pct_change_plot, backend='bokeh'))
+#     col2.write(merge_county_pct_change_df)
 
 
 with macd_container:
