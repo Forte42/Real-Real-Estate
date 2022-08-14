@@ -16,6 +16,8 @@ import macd
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pytz
+
 
 
 # from application.app.folder.file import func_name
@@ -217,11 +219,26 @@ with montecarlo:
             plt_sim = mc_sim.calc_cumulative_return()
             st.write("Cumulative Returns")
             st.write(plt_sim)
+
             st.write("Simulated RE Value Trajectories")
             st.line_chart(plt_sim)
+
             mc_sim.plot_distribution()
+            plot_title = f"Distribution of Final Cumuluative Returns Across All 1000 Simulations"
+            st.write(plt_sim.iloc[-1, :])
+            #plt_mc.hist()
+            plt.show()
+            st.pyplot()
+            """confidence_interval = plt_sim.iloc[-1, :].quantile(q=[0.025, 0.975])
+            plt_mc.axvline(confidence_interval.iloc[0], color='r')
+            plt_mc.axvline(confidence_interval.iloc[1], color='r')
+            st.write(plt)
+            st.pyplot(plt)"""
+
             st.write("Cumulative Returns Summary")
             st.write(mc_sim.summarize_cumulative_return())
+
+            
     except:
         st.write("Please select options")
     
