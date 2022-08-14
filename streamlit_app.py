@@ -19,7 +19,7 @@ import numpy as np
 import pytz
 
 
-
+os.environ["NASDAQ_DATA_LINK_API_KEY"]=st.secrets['nasdaq_key']
 # from application.app.folder.file import func_name
 
 st.set_page_config(layout="wide")
@@ -29,7 +29,7 @@ region_df = pd.DataFrame()
 zillow_df = pd.DataFrame()
 county_coordinates_df = pd.DataFrame()
 master_df = pd.DataFrame()
-NASDAQ_DATA_LINK_API_KEY=st.secrets['nasdaq_key']
+
 #
 # Load data
 #
