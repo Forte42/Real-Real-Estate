@@ -193,7 +193,25 @@ with montecarlo:
     st.subheader("Monte Carlo Simulations")
     monte_carlo_county_list = filtered_df['county'].unique()
     options = st.multiselect(
-     'Choose list of counties that you would like to get simulations for',
-     monte_carlo_county_list,
-     [])
-    st.write(options)
+        'Choose list of counties that you would like to get simulations for',
+        monte_carlo_county_list,
+        [])
+
+    start_date = '2015-01-31'
+    end_date = '2022-06-30'
+    mc_df = filtered_df
+    st.write(mc_df)
+    monte_carlo_options = []
+    for group_loc in options:
+        df_temp = mc_df.loc[(mc_df['county']==group_loc) & (mc_df['date'] <= end_date) & (mc_df['date'] >= start_date)]
+        monte_carlo_options.append(df_temp.drop('county', axis=1).reset_index())
+    monte_carlo_df = pd.concat(monte_carlo_options, axis=1, keys=options)
+
+    calculate_monte_carlo_results = st.button("Get Monte Carlo Results")
+    if calculate_monte_carlo_results:
+        mc_sim = MCSimulation(monte_carlo_df, "", 1000, 120)
+        mc_sim.calc_cumulative_return()
+        mc_sim.plot_simulation()
+        mc_sim.plot_distribution()
+        mc_sim.summarize_cumulative_return()
+
