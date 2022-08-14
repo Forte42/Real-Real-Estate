@@ -1,4 +1,5 @@
 import os
+from turtle import title
 import streamlit as st
 import pandas as pd
 import holoviews as hv
@@ -15,6 +16,7 @@ import realestate_stats as res
 import macd
 
 import matplotlib.pyplot as plt
+import matplotlib.lines as lines
 import numpy as np
 
 
@@ -208,6 +210,7 @@ with montecarlo:
     for group_loc in options:
         df_temp = mc_df.loc[(mc_df['county']==group_loc) & (mc_df['date'] <= end_date) & (mc_df['date'] >= start_date)]
         monte_carlo_options.append(df_temp.drop('county', axis=1).reset_index())
+   
     
     try:   
         monte_carlo_df = pd.concat(monte_carlo_options, axis=1, keys=options)
@@ -219,8 +222,17 @@ with montecarlo:
             st.write(plt_sim)
             st.write("Simulated RE Value Trajectories")
             st.line_chart(plt_sim)
-            mc_sim.plot_distribution()
-            st.write("Cumulative Returns Summary")
+
+            hist_data_arr = np.array(plt_sim.iloc[-1, :])
+            fig, ax = plt.subplots()
+            ax.hist(hist_data_arr, bins=10)
+            confidence_interval = plt_sim.iloc[-1, :].quantile(q=[0.025, 0.975])
+        
+            fig.add_artist(plt_sim.iloc[-1, :].plot(kind='hist', bins=10,density=True, title="Plot Distribution").axvline(confidence_interval.iloc[0], color='red'))
+            fig.add_artist(plt_sim.iloc[-1, :].plot(kind='hist', bins=10,density=True).axvline(confidence_interval.iloc[1], color='red'))
+            st.pyplot(fig)
+
+            st.write("Cumulative Returns Summary over the next 10 years")
             st.write(mc_sim.summarize_cumulative_return())
     except:
         st.write("Please select options")
