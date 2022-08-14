@@ -2,3 +2,4 @@ pandas==1.4.2
 hvplot==0.7.3
 nasdaq-data-link==1.0.2
 pandas_ta==0.3.14b0
+matplotlib==3.5.1
