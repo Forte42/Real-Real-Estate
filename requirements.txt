@@ -1,8 +1,6 @@
 pandas==1.4.2
-numpy==1.21.5
 hvplot==0.7.3
 nasdaq-data-link==1.0.2
 pandas_ta==0.3.14b0
 matplotlib==3.5.1
 geoviews==1.9.5
-cartopy==0.18.0
