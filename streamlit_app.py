@@ -221,7 +221,7 @@ with montecarlo:
             st.write("Cumulative Returns")
             st.write(plt_sim)
             st.write("120 Month Monte Carlo Sim(PCT Return)")
-            st.line_chart(plt_sim, x='Months', y='PCT Return')
+            st.line_chart(plt_sim)
     
         
             hist_data_arr = np.array(plt_sim.iloc[-1, :])
