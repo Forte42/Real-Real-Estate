@@ -14,6 +14,10 @@ import realestate_data as red
 import realestate_stats as res
 import macd
 
+import matplotlib.pyplot as plt
+import numpy as np
+
+
 # from application.app.folder.file import func_name
 
 st.set_page_config(layout="wide")
@@ -190,5 +194,37 @@ with macd_container:
     col1.write(hv.render(plotting_county_macd, backend='bokeh'))
 
 with montecarlo:
-
     st.subheader("Monte Carlo Simulations")
+    monte_carlo_county_list = filtered_df['county'].unique()
+    options = st.multiselect(
+        'Choose list of counties that you would like to get simulations for',
+        monte_carlo_county_list,
+        [])
+
+    start_date = '2015-01-31'
+    end_date = '2022-06-30'
+    mc_df = filtered_df
+    monte_carlo_options = []
+    for group_loc in options:
+        df_temp = mc_df.loc[(mc_df['county']==group_loc) & (mc_df['date'] <= end_date) & (mc_df['date'] >= start_date)]
+        monte_carlo_options.append(df_temp.drop('county', axis=1).reset_index())
+    
+    try:   
+        monte_carlo_df = pd.concat(monte_carlo_options, axis=1, keys=options)
+        calculate_monte_carlo_results = st.button("Get Monte Carlo Results")
+        if calculate_monte_carlo_results:
+            mc_sim = MCSimulation(monte_carlo_df, "", 1000, 120)
+            plt_sim = mc_sim.calc_cumulative_return()
+            st.write("Cumulative Returns")
+            st.write(plt_sim)
+            st.write("Simulated RE Value Trajectories")
+            st.line_chart(plt_sim)
+            mc_sim.plot_distribution()
+            st.write("Cumulative Returns Summary")
+            st.write(mc_sim.summarize_cumulative_return())
+    except:
+        st.write("Please select options")
+    
+    
+        
+
