@@ -23,6 +23,8 @@ import altair as alt
 
 # from application.app.folder.file import func_name
 
+NASDAQ_DATA_LINK_API_KEY=st.secrets['NASDAQ_DATA_LINK_API_KEY']
+
 st.set_page_config(layout="wide")
 
 # Global variables
