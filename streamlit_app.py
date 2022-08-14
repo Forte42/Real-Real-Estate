@@ -33,8 +33,8 @@ master_df = pd.DataFrame()
 #
 # Load data
 #
-region_df = red.load_zillow_region_data()
-zillow_df = red.load_zillow_sales_data(region_df)
+#region_df = red.load_zillow_region_data()
+#zillow_df = red.load_zillow_sales_data(region_df)
 county_coordinates_df = red.load_county_coordinates()
 
 
