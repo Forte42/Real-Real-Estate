@@ -14,6 +14,9 @@ import realestate_data as red
 import realestate_stats as res
 import macd
 
+import matplotlib.pyplot as plt
+
+
 # from application.app.folder.file import func_name
 
 st.set_page_config(layout="wide")
@@ -208,10 +211,11 @@ with montecarlo:
     monte_carlo_df = pd.concat(monte_carlo_options, axis=1, keys=options)
 
     calculate_monte_carlo_results = st.button("Get Monte Carlo Results")
+    #col_mc1, col_mc2 = st.columns(2)
     if calculate_monte_carlo_results:
         mc_sim = MCSimulation(monte_carlo_df, "", 1000, 120)
-        mc_sim.calc_cumulative_return()
-        mc_sim.plot_simulation()
-        mc_sim.plot_distribution()
-        mc_sim.summarize_cumulative_return()
+        st.write(mc_sim.calc_cumulative_return())
+        st.write(mc_sim.plot_simulation())
+        st.write(mc_sim.plot_distribution())
+        st.write(mc_sim.summarize_cumulative_return())
 
