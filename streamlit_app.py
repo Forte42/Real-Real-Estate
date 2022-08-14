@@ -1,6 +1,7 @@
 import os
 import streamlit as st
 import pandas as pd
+import pydeck as pdk
 import holoviews as hv
 import hvplot.pandas
 from pathlib import Path
@@ -14,6 +15,12 @@ import realestate_data as red
 import realestate_stats as res
 import macd
 
+import matplotlib.pyplot as plt
+import numpy as np
+import pytz
+
+
+NASDAQ_DATA_LINK_API_KEY = st.secrets['NASDAQ_DATA_LINK_API_KEY']
 # from application.app.folder.file import func_name
 
 st.set_page_config(layout="wide")
@@ -80,22 +87,50 @@ with avg_home_sales:
     # Divide price by 1000 so that it looks better on map.
     county_mean_df["value"] = county_mean_df["value"] / 1000
 
-    county_mean_plot = county_mean_df.hvplot.points(
-        'longitude',
-        'latitude',
-        geo=True,
-        hover=True,
-        hover_cols=['county', 'cum_pct_ch'],
-        size='value',
-        color='value',
-        tiles='OSM',
-        height=700,
-        width=700,
-        title='Average home sales per county from 1/1/2010 to 12/31/2021')
+    # Tooltip to display county data
+    tooltip = {
+        "html": "County: {county}</br> State: {state}</br>  Mean Sales: ${value}</br> " +
+        "Latitude: {latitude} </br> Longitude: {longitude} </br> "
+    }
 
-    col1, col2 = st.columns(2)
-    col1.write(hv.render(county_mean_plot, backend='bokeh'))
-    col2.write(county_mean_df)
+    # Define a layer to display on a map
+    layer = pdk.Layer(
+        "ScatterplotLayer",
+        county_mean_df,
+        pickable=True,
+        opacity=0.8,
+        stroked=True,
+        filled=True,
+        radius_scale=20,
+        radius_min_pixels=1,
+        radius_max_pixels=100,
+        line_width_min_pixels=1,
+        get_position='[longitude, latitude]',
+        get_radius="value",
+        get_fill_color=[255, 140, 0],
+        get_line_color=[0, 0, 0],
+    )
+
+    # Set the viewport location
+    view_state = pdk.ViewState(
+        latitude=30.00,
+        longitude=-99,
+        zoom=4.1,
+        pitch=50,
+        height=700,
+        width=1200,
+    )
+
+    # Render
+    r = pdk.Deck(
+        layers=[layer],
+        initial_view_state=view_state,
+        tooltip=tooltip)
+
+    col1, col2 = st.columns((3, 1))
+    # col1.write(hv.render(county_mean_plot, backend='bokeh'))
+    col1.write(r)
+    col2.dataframe(county_mean_df, 700, 700)
 
 
 with pct_change_sales:
@@ -113,22 +148,50 @@ with pct_change_sales:
     merge_county_pct_change_df = merge_county_pct_change_df[[
         'region_id', 'county', 'state', 'latitude', 'longitude', 'cum_pct_ch']]
 
-    pct_change_plot = merge_county_pct_change_df.hvplot.points(
-        'longitude',
-        'latitude',
-        geo=True,
-        hover=True,
-        hover_cols=['county', 'cum_pct_ch'],
-        size='cum_pct_ch',
-        color='cum_pct_ch',
-        tiles='OSM',
-        height=700,
-        width=700,
-        title='Percent change per county from 1/1/2010 to 12/31/2021')
+    # Tooltip to display county data
+    tooltip = {
+        "html": "County: {county}</br> State: {state}</br>  Pct Change: {cum_pct_ch}%</br> " +
+        "Latitude: {latitude} </br> Longitude: {longitude} </br> "
+    }
 
-    col1, col2 = st.columns(2)
-    col1.write(hv.render(pct_change_plot, backend='bokeh'))
-    col2.write(merge_county_pct_change_df)
+    # Define a layer to display on a map
+    layer = pdk.Layer(
+        "ScatterplotLayer",
+        merge_county_pct_change_df,
+        pickable=True,
+        opacity=0.8,
+        stroked=True,
+        filled=True,
+        radius_scale=100,
+        radius_min_pixels=1,
+        radius_max_pixels=100,
+        line_width_min_pixels=1,
+        get_position='[longitude, latitude]',
+        get_radius="cum_pct_ch",
+        get_fill_color=[255, 140, 0],
+        get_line_color=[0, 0, 0],
+    )
+
+    # Set the viewport location
+    view_state = pdk.ViewState(
+        latitude=30.00,
+        longitude=-99,
+        zoom=4.1,
+        pitch=50,
+        height=700,
+        width=1200,
+    )
+
+    # Render
+    r = pdk.Deck(
+        layers=[layer],
+        initial_view_state=view_state,
+        tooltip=tooltip)
+
+    col1, col2 = st.columns((3, 1))
+    # col1.write(hv.render(county_mean_plot, backend='bokeh'))
+    col1.write(r)
+    col2.dataframe(merge_county_pct_change_df, 1000, 700)
 
 
 with macd_container:
@@ -188,5 +251,47 @@ with macd_container:
     col1.write(hv.render(plotting_county_macd, backend='bokeh'))
 
 with montecarlo:
+    st.header("Monte Carlo Simulations")
+    monte_carlo_county_list = filtered_df['county'].unique()
+    options = st.multiselect(
+        'Choose list of counties that you would like to get simulations for',
+        monte_carlo_county_list,
+        [])
 
-    st.subheader("Monte Carlo Simulations")
+    start_date = '2015-01-31'
+    end_date = '2022-06-30'
+    mc_df = filtered_df
+    monte_carlo_options = []
+    for group_loc in options:
+        df_temp = mc_df.loc[(mc_df['county'] == group_loc) & (
+            mc_df['date'] <= end_date) & (mc_df['date'] >= start_date)]
+        monte_carlo_options.append(
+            df_temp.drop('county', axis=1).reset_index())
+
+    try:
+        monte_carlo_df = pd.concat(monte_carlo_options, axis=1, keys=options)
+        calculate_monte_carlo_results = st.button("Get Monte Carlo Results")
+        if calculate_monte_carlo_results:
+            mc_sim = MCSimulation(monte_carlo_df, "", 1000, 120)
+            plt_sim = mc_sim.calc_cumulative_return()
+            st.write("Cumulative Returns")
+            st.write(plt_sim)
+            st.write("120 Month Monte Carlo Sim(PCT Return)")
+            st.line_chart(plt_sim)
+
+            hist_data_arr = np.array(plt_sim.iloc[-1, :])
+            fig, ax = plt.subplots()
+            ax.hist(hist_data_arr, bins=10)
+            confidence_interval = plt_sim.iloc[-1,
+                                               :].quantile(q=[0.025, 0.975])
+
+            fig.add_artist(plt_sim.iloc[-1, :].plot(kind='hist', bins=10, density=True,
+                           title="Plot Distribution").axvline(confidence_interval.iloc[0], color='red'))
+            fig.add_artist(plt_sim.iloc[-1, :].plot(kind='hist', bins=10,
+                           density=True).axvline(confidence_interval.iloc[1], color='red'))
+            st.pyplot(fig)
+
+            st.write("Cumulative Returns Summary over the next 10 years")
+            st.write(mc_sim.summarize_cumulative_return())
+    except:
+        st.write("Please select options")
