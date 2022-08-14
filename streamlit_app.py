@@ -19,7 +19,7 @@ import numpy as np
 import pytz
 
 
-"NASDAQ_DATA_LINK_API_KEY"=st.secrets['NASDAQ_DATA_LINK_API_KEY']
+NASDAQ_DATA_LINK_API_KEY=st.secrets['NASDAQ_DATA_LINK_API_KEY']
 # from application.app.folder.file import func_name
 
 st.set_page_config(layout="wide")
