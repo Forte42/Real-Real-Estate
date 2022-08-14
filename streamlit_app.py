@@ -29,12 +29,12 @@ region_df = pd.DataFrame()
 zillow_df = pd.DataFrame()
 county_coordinates_df = pd.DataFrame()
 master_df = pd.DataFrame()
-
+NASDAQ_DATA_LINK_API_KEY=st.secrets['nasdaq_key']
 #
 # Load data
 #
-#region_df = red.load_zillow_region_data()
-#zillow_df = red.load_zillow_sales_data(region_df)
+region_df = red.load_zillow_region_data()
+zillow_df = red.load_zillow_sales_data(region_df)
 county_coordinates_df = red.load_county_coordinates()
 
 
