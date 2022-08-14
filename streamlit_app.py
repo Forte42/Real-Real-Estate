@@ -18,6 +18,7 @@ import macd
 import matplotlib.pyplot as plt
 import matplotlib.lines as lines
 import numpy as np
+import altair as alt
 
 
 # from application.app.folder.file import func_name
@@ -196,7 +197,7 @@ with macd_container:
     col1.write(hv.render(plotting_county_macd, backend='bokeh'))
 
 with montecarlo:
-    st.subheader("Monte Carlo Simulations")
+    st.header("Monte Carlo Simulations")
     monte_carlo_county_list = filtered_df['county'].unique()
     options = st.multiselect(
         'Choose list of counties that you would like to get simulations for',
@@ -220,8 +221,26 @@ with montecarlo:
             plt_sim = mc_sim.calc_cumulative_return()
             st.write("Cumulative Returns")
             st.write(plt_sim)
-            st.write("Simulated RE Value Trajectories")
-            st.line_chart(plt_sim)
+            st.write("120 Month Monte Carlo Sim(PCT Return)")
+            st.line_chart(plt_sim, x='Months', y='PCT Return')
+          
+          
+            
+            # chart = (
+            #         alt.Chart(
+            #             data=plt_sim,
+            #             title="Your title",
+            #         )
+            #         .mark_line()
+            #         .encode(
+            #         x=alt.X("capacity 1", axis=alt.Axis(title="Capacity 1")),
+            #             x=alt.X("capacity 2", axis=alt.Axis(title="Capacity 2")),
+            #         )
+            # )
+
+            # st.altair_chart(chart)
+            
+
 
             hist_data_arr = np.array(plt_sim.iloc[-1, :])
             fig, ax = plt.subplots()
