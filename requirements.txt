@@ -4,3 +4,4 @@ nasdaq-data-link==1.0.2
 pandas_ta==0.3.14b0
 matplotlib==3.5.1
 geoviews==1.9.5
+geos==3.7.2
