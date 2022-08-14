@@ -40,7 +40,7 @@ We will groom user stories and add acceptance critera during team meetings.
 
 ---
 
-This code uses Python 3.9.12 with Pandas (1.4.2), Jupyterlab (3.3.2), hvPlot (0.7.3), Streamlit (1.12.0),Nasdaq-Data-Link (1.0.2), and Pandas_ta (0.3.14b0).
+This code uses Python 3.9.12 with Pandas (1.4.2), Jupyterlab (3.3.2), hvPlot (0.7.3), Streamlit (1.12.0), Matplotlib(3.5.1), Nasdaq-Data-Link (1.0.2), and Pandas_ta (0.3.14b0).
 
 ## Installation
 
