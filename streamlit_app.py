@@ -15,6 +15,7 @@ import realestate_stats as res
 import macd
 
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 # from application.app.folder.file import func_name
@@ -203,19 +204,27 @@ with montecarlo:
     start_date = '2015-01-31'
     end_date = '2022-06-30'
     mc_df = filtered_df
-    st.write(mc_df)
     monte_carlo_options = []
     for group_loc in options:
         df_temp = mc_df.loc[(mc_df['county']==group_loc) & (mc_df['date'] <= end_date) & (mc_df['date'] >= start_date)]
         monte_carlo_options.append(df_temp.drop('county', axis=1).reset_index())
-    monte_carlo_df = pd.concat(monte_carlo_options, axis=1, keys=options)
-
-    calculate_monte_carlo_results = st.button("Get Monte Carlo Results")
-    #col_mc1, col_mc2 = st.columns(2)
-    if calculate_monte_carlo_results:
-        mc_sim = MCSimulation(monte_carlo_df, "", 1000, 120)
-        st.write(mc_sim.calc_cumulative_return())
-        st.write(mc_sim.plot_simulation())
-        st.write(mc_sim.plot_distribution())
-        st.write(mc_sim.summarize_cumulative_return())
+    
+    try:   
+        monte_carlo_df = pd.concat(monte_carlo_options, axis=1, keys=options)
+        calculate_monte_carlo_results = st.button("Get Monte Carlo Results")
+        if calculate_monte_carlo_results:
+            mc_sim = MCSimulation(monte_carlo_df, "", 1000, 120)
+            plt_sim = mc_sim.calc_cumulative_return()
+            st.write("Cumulative Returns")
+            st.write(plt_sim)
+            st.write("Simulated RE Value Trajectories")
+            st.line_chart(plt_sim)
+            mc_sim.plot_distribution()
+            st.write("Cumulative Returns Summary")
+            st.write(mc_sim.summarize_cumulative_return())
+    except:
+        st.write("Please select options")
+    
+    
+        
 
