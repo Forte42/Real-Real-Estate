@@ -28,7 +28,7 @@ The purpose of this project is to build an application that enables home buyers 
 
 Our MVP will be based on the following user stories to start:
 
-As a home buyer, I want to fetch historical housing prices by county in America from 1996-2022
+As a home buyer, I want to fetch historical housing prices by county in America from 1997-2022
 
 As a home buyer, I want to list which counties gained or loss value in a specifc timeframe
 
