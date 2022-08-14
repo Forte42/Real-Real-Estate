@@ -223,12 +223,11 @@ with montecarlo:
             st.write("Simulated RE Value Trajectories")
             st.line_chart(plt_sim)
 
-            mc_sim.plot_distribution()
+            
             plot_title = f"Distribution of Final Cumuluative Returns Across All 1000 Simulations"
+            st.write(plot_title)
             st.write(plt_sim.iloc[-1, :])
-            #plt_mc.hist()
-            plt.show()
-            st.pyplot()
+            mc_sim.plot_distribution()
             """confidence_interval = plt_sim.iloc[-1, :].quantile(q=[0.025, 0.975])
             plt_mc.axvline(confidence_interval.iloc[0], color='r')
             plt_mc.axvline(confidence_interval.iloc[1], color='r')
