@@ -162,7 +162,7 @@ with pct_change_sales:
         opacity=0.8,
         stroked=True,
         filled=True,
-        radius_scale=100,
+        radius_scale=200,
         radius_min_pixels=1,
         radius_max_pixels=100,
         line_width_min_pixels=1,
