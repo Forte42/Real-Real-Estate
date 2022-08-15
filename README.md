@@ -78,6 +78,10 @@ This sample application was authored by:
 - Kristen Potter
 - Matthew Ho
 
+The module MCForecastTools.py was adapted from github user vmieres' repo:
+
+ [Personal-Finance-Planner-Retirement-Planning](https://github.com/vmieres/Personal-Finance-Planer-Retirement-Planing/blob/main/MCForecastTools.py)
+
 ## License
 
 The MIT License (MIT)
