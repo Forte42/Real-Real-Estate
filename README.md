@@ -1,5 +1,7 @@
 # Realestate of Mind
 
+[Jump straight to webapp](https://forte42-realestate-of-mind-streamlit-app-vov7jq.streamlitapp.com/)
+
 ## Description
 
 ---
@@ -26,15 +28,13 @@ The purpose of this project is to build an application that enables home buyers 
 
 Our MVP will be based on the following user stories to start:
 
-As a home buyer, I want to fetch historical housing prices by county in America from 2018-2022
+As a home buyer, I want to fetch historical housing prices by county in America from 1997-2022
 
 As a home buyer, I want to list which counties gained or loss value in a specifc timeframe
 
 As a home buyer, I want to view a map of which counties gained or loss value in a specific timeframe
 
 As a home buyer, I want to determine which county has the highest probability of gaining or losing in the future
-
-We will groom user stories and add acceptance critera during team meetings.
 
 ## Technology Stack
 
@@ -52,6 +52,12 @@ In order to use this application, you will need to install `Jupyter`, `pandas` a
 
 - Installing hvPlot - To install `hvPlot`, please refer to the [hvPlot Installation Guide](https://pypi.org/project/hvplot).
 
+- Installing Streamlit - To install Streamlit, please refer to the [streamlit Installation Guide](https://docs.streamlit.io/library/get-started/installation).
+
+- Installing Pydeck - To install Pydeck, plese refer to the [pydeck Installation guide](https://pydeck.gl/installation.html).
+
+- Installing Pandas_ta - To install Pandas_ta, please refer to the [pandas_ta Installation guide](https://github.com/twopirllc/pandas-ta#installation).
+
 ## Usage
 
 To launch the Notebook, perform the following steps:
@@ -68,6 +74,8 @@ To launch the Notebook, perform the following steps:
 - MACD Analysis
 - Monte Carlo Simulations
 
+To use the web application, go to https://forte42-realestate-of-mind-streamlit-app-vov7jq.streamlitapp.com/
+
 ## Contributors
 
 This sample application was authored by:
@@ -77,6 +85,10 @@ This sample application was authored by:
 - Smruthi Danda
 - Kristen Potter
 - Matthew Ho
+
+The module MCForecastTools.py was adapted from github user vmieres' repo:
+
+ [Personal-Finance-Planner-Retirement-Planning](https://github.com/vmieres/Personal-Finance-Planer-Retirement-Planing/blob/main/MCForecastTools.py)
 
 ## License
 
