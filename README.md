@@ -1,6 +1,6 @@
 # Realestate of Mind
 
-[Jump straight to webapp](https://forte42-realestate-of-mind-streamlit-app-vov7jq.streamlitapp.com/)
+[Jump straight to webapp](https://forte42-realestate-of-mind-streamlit-app-2h4q7j.streamlitapp.com/)
 
 ## Description
 
@@ -40,7 +40,7 @@ As a home buyer, I want to determine which county has the highest probability of
 
 ---
 
-This code uses Python 3.9.12 with Pandas (1.4.2), Jupyterlab (3.3.2), hvPlot (0.7.3), Streamlit (1.12.0), Matplotlib(3.5.1), Nasdaq-Data-Link (1.0.2), and Pandas_ta (0.3.14b0).
+This code uses Python 3.9.12 with Pandas (1.4.2), Pydeck (0.7.1), Jupyterlab (3.3.2), hvPlot (0.7.3), Streamlit (1.12.0), Matplotlib(3.5.1), Nasdaq-Data-Link (1.0.2), and Pandas_ta (0.3.14b0).
 
 ## Installation
 
